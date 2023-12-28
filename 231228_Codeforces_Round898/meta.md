@@ -7,5 +7,4 @@
 ### Participation
 - Type: Practice
 - Language: C++20
-- Score: ? of ?
-- Rating: NA
+- Sovled: 1 of 8
