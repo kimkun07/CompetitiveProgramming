@@ -4,7 +4,7 @@
 #include <queue>
 using namespace std;
 typedef long long ll;
-typedef pair<int, pair<int, int>> dijkType;
+typedef pair<ll, pair<int, int>> dijkType;
 
 void solve(int test){
     int n, m; cin >> n >> m;
@@ -21,9 +21,9 @@ void solve(int test){
         s[i] = ss;
     }
     
-    pair<int, int> result[1005];
+    pair<ll, int> result[1005];
     for(int i = 1; i <= n; ++i){
-        result[i] = make_pair(INT32_MAX, s[i]);
+        result[i] = make_pair(LONG_LONG_MAX, s[i]);
     }
     priority_queue < dijkType, vector<dijkType>, greater<dijkType>> heap; // cost, <u, bike>
 
