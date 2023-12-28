@@ -1,0 +1,4 @@
+1) meta.md를 lint해주는 workflow를 만들면 좋지 않을까?
+    Contest Link, Start, Length 등의 정보가 모두 valid하고, Type의 value는 Live Participation, Pracitce ... 중 하나여야 한다.
+    Site에 따라 Rating과 Score 등의 Logic도 추가한다.
+2) 폴더명과 파일명, meta.md로부터 정보를 얻어와서 그걸 요약한 md 파일을 생성해주는 것도
