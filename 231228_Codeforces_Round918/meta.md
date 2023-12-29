@@ -6,14 +6,21 @@
 - Length: 02:30
 - Division: 4
 
+### Total
+- Solved: 7 of 7
+- Unsolved: 0 of 7
+
 ### Live Participation
 - Language: C++20
-- Solved: 5 of 7 \
+- Solved: 5 of 7
     A, B, C, D, F
+- Unsolved: 2 of 7
+    E, G
 - Score: ? of ?
 - Rating: ? of ?
 
 ### Practice
 - Language: C++20
-- Solved: 1 of 2 \
+- Solved: 2 of 2
     E, G
+- Unsolved: 0 of 2
