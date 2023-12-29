@@ -14,4 +14,4 @@
 ### Practice
 - Language: C++20
 - Solved: 1 of 2 \
-    G
+    E, G
