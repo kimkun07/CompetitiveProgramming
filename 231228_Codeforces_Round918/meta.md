@@ -4,8 +4,14 @@
 - Length: 02:30
 - Division: 4
 
-### Participation
-- Type: Live Participation
+### Live Participation
 - Language: C++20
+- Solved: 5 of 7 \
+    A, B, C, D, F
 - Score: ? of ?
 - Rating: ? of ?
+
+### Practice
+- Language: C++20
+- Solved: 1 of 2 \
+    G

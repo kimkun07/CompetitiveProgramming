@@ -4,7 +4,7 @@
 - Length: 02:30
 - Division: 4
 
-### Participation
-- Type: Practice
+### Practice
 - Language: C++20
-- Sovled: 1 of 8
+- Solved: 1 of 8 \
+    A

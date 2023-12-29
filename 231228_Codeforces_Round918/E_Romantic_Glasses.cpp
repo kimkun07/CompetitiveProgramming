@@ -12,16 +12,22 @@ void solve(int test){
     for(int i = 1; i <= n; ++i){
         cin >> a[i];
     }
-    
+
+    even[0] = odd[0] = 0;
     for(int i = 1; i <= n; ++i){
-        even[i] = odd[i] = 0;
-        for(int j = 1; j <= i; ++j){
-            if (i % 2 == 0) {
-                even[j] += a[i];
-            } else {
-                odd[j] += a[i];
-            }
-            if (even[j] == odd[j]) {
+        even[i] = even[i - 1];
+        odd[i] = odd[i - 1];
+        if (i % 2 == 0) {
+            even[i] += a[i];
+        } else {
+            odd[i] += a[i];
+        }
+    }
+    
+    // (j+1)..i
+    for(int i = 1; i <= n; ++i){
+        for(int j = 0; j < i; ++j){
+            if (even[i] - even[j] == odd[i] - odd[j]) {
                 cout << "YES" << endl;
                 return;
             }
