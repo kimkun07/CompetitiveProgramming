@@ -14,15 +14,14 @@ void solve(int test) {
   cin >> s;
 
   ll result = 0;
+  set<char> charSet;
 
   for (int length = n; length >= 1; length--) {
     // 0 ~ ((n - 1) - (length - 1)): Only one char can be saved
     // ((n - 1) - (length - 2)) ~ (n - 1): suffix of `length - 1`
     // string with `length`: char x + suffix
-    set<char> charSet;
-    for (auto &&i : s.substr(0, (n - 1) - (length - 1) + 1)) {
-      charSet.insert(i);
-    }
+    const int newCandidate = (n - 1) - (length - 1);
+    charSet.insert(s[newCandidate]);
 
     result += charSet.size();
   }
