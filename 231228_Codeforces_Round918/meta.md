@@ -16,8 +16,7 @@
     A, B, C, D, F
 - Unsolved: 2 of 7
     E, G
-- Score: ? of ?
-- Rating: ? of ?
+- Rating: 3583 of 12336
 
 ### Practice
 - Language: C++20
