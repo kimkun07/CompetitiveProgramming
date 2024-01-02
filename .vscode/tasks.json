@@ -8,7 +8,7 @@
         "-x",
         "c++",
         "-g",
-        "-O2",
+        // "-O2", VSCode breakpoint not working correctly with -O2 option
         "-std=gnu++20",
         "-static",
         "-fdiagnostics-color=always",
