@@ -13,35 +13,18 @@ void solve(int test) {
   string s;
   cin >> s;
 
-  set<string> currentSet;
-  set<string> nextSet;
-  currentSet.insert(s);
-  
   ll result = 0;
-  // Use references to avoid copying
-  set<string> &currentSetRef = currentSet;
-  set<string> &nextSetRef = nextSet;
-  
-  for (int length = n; length >= 1; length--) {
-    // currentSet element: string with `length`
-    // nextSet element: string with `length - 1`
-    for (auto &&p : currentSetRef) {
-      string str = p;
 
-      if (str.length() > 0) {
-        string dropFirst = str.substr(1, str.length());
-        nextSetRef.insert(dropFirst);
-      }
-      if (str.length() > 1) {
-        string dropSecond = str[0] + str.substr(2, str.length());
-        nextSetRef.insert(dropSecond);
-      }
+  for (int length = n; length >= 1; length--) {
+    // 0 ~ ((n - 1) - (length - 1)): Only one char can be saved
+    // ((n - 1) - (length - 2)) ~ (n - 1): suffix of `length - 1`
+    // string with `length`: char x + suffix
+    set<char> charSet;
+    for (auto &&i : s.substr(0, (n - 1) - (length - 1) + 1)) {
+      charSet.insert(i);
     }
 
-    result += nextSetRef.size();
-    // currentSet = nextSet. No need to copy all set.
-    swap(currentSetRef, nextSetRef);
-    nextSetRef.clear();
+    result += charSet.size();
   }
 
   cout << result << endl;
