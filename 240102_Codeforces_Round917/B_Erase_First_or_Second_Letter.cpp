@@ -16,26 +16,32 @@ void solve(int test) {
   set<string> currentSet;
   set<string> nextSet;
   currentSet.insert(s);
+  
   ll result = 0;
+  // Use references to avoid copying
+  set<string> &currentSetRef = currentSet;
+  set<string> &nextSetRef = nextSet;
+  
   for (int length = n; length >= 1; length--) {
     // currentSet element: string with `length`
     // nextSet element: string with `length - 1`
-    for (auto &&p : currentSet) {
+    for (auto &&p : currentSetRef) {
       string str = p;
 
       if (str.length() > 0) {
         string dropFirst = str.substr(1, str.length());
-        nextSet.insert(dropFirst);
+        nextSetRef.insert(dropFirst);
       }
       if (str.length() > 1) {
         string dropSecond = str[0] + str.substr(2, str.length());
-        nextSet.insert(dropSecond);
+        nextSetRef.insert(dropSecond);
       }
     }
 
-    result += nextSet.size();
-    currentSet = nextSet;
-    nextSet.clear();
+    result += nextSetRef.size();
+    // currentSet = nextSet. No need to copy all set.
+    swap(currentSetRef, nextSetRef);
+    nextSetRef.clear();
   }
 
   cout << result << endl;
