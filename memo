@@ -2,4 +2,6 @@
     https://github.com/DavidAnson/markdownlint/blob/main/README.md
     Contest Link, Start, Length 등의 정보가 모두 valid하고, Type의 value는 Live Participation, Pracitce ... 중 하나여야 한다.
     Site에 따라 Rating과 Score 등의 Logic도 추가한다.
-2) 폴더명과 파일명, meta.md로부터 정보를 얻어와서 그걸 요약한 md 파일을 생성해주는 것도
+2) 폴더명과 파일명도 검사하기
+3) 폴더명과 파일명, meta.md로부터 정보를 얻어와서 그걸 요약한 md 파일을 생성해주는 것도
+4) Codeforces API를 사용하면 name, startTimeSeconds, durationSeconds, url를 알 수 있다.
