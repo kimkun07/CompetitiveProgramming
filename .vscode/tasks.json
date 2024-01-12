@@ -3,21 +3,23 @@
     {
       "label": "build",
       "type": "cppbuild",
-      "command": "C:/Program Files/mingw64/bin/g++.exe",
+      "command": "C:\\Program Files\\mingw64\\bin\\g++.exe",
       "args": [
-        "-x",
+        "-x", // Delete Local Symbol
         "c++",
-        "-g",
-        "-O2",
+        "-w", // Disable Warning Message
+        "-g", // Insert infomation for debugger in binary
+        // "-O2", VSCode breakpoint not working correctly with -O2 option
         "-std=gnu++20",
         "-static",
         "-fdiagnostics-color=always",
+        "-fcompare-debug-second", // Disable note Message
         "${file}",
         "-o",
         "${fileDirname}\\exe\\${fileBasenameNoExtension}.exe"
       ],
       "options": {
-        "cwd": "C:/Program Files/mingw64/bin"
+        "cwd": "C:\\Program Files\\mingw64\\bin"
       },
       "problemMatcher": ["$gcc"],
       "group": {
