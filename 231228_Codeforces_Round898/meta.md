@@ -9,6 +9,6 @@
 ### Practice
 - Language: C++20
 - Solved: 1 of 8 \
-    A
+  A
 - Unsolved: 7 of 8 \
-    B, C, D, E, F, G, H
+  B, C, D, E, F, G, H
