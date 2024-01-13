@@ -1,9 +1,17 @@
 {
   "tasks": [
     {
+      "label": "CreateExeDirectory",
+      "type": "shell",
+      "command": "mkdir ${fileDirname}\\exe || echo 0",
+      "presentation": {
+        // "close": true
+      }
+    },
+    {
       "label": "build",
       "type": "cppbuild",
-      "command": "C:\\Program Files\\mingw64\\bin\\g++.exe",
+      "command": "C:/Program Files/mingw64/bin/g++.exe",
       "args": [
         "-x", // Delete Local Symbol
         "c++",
@@ -19,13 +27,23 @@
         "${fileDirname}\\exe\\${fileBasenameNoExtension}.exe"
       ],
       "options": {
-        "cwd": "C:\\Program Files\\mingw64\\bin"
+        "cwd": "C:/Program Files/mingw64/bin"
       },
       "problemMatcher": ["$gcc"],
       "group": {
         "kind": "build",
         "isDefault": true
-      }
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "dependsOn": ["CreateExeDirectory"],
+      "dependsOrder": "sequence"
     }
   ],
   "version": "2.0.0"
