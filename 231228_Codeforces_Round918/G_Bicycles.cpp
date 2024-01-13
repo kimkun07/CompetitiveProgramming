@@ -54,7 +54,7 @@ void solve(int test) {
       int v = map[u][i].first;
       int w = map[u][i].second;
 
-      int newCost = cost + bike * w;
+      ll newCost = cost + bike * w;
       int newBike = (bike < s[v]) ? bike : s[v];
       // It can be result[v].second > s[v]
       if (newCost < result[v].first or newBike < result[v].second) {
