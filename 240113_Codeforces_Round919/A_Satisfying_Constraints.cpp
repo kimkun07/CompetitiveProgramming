@@ -23,7 +23,13 @@ void solve(int testcase) {
       upper = min(upper, x);
       break;
     default:
-      auto it = upper_bound(exclude.begin(), exclude.end(), x);
+      auto it = lower_bound(exclude.begin(), exclude.end(), x);
+      if (it - exclude.begin() < exclude.size()) {
+        // safe dereference
+        if (x == *it) {
+          continue;
+        }
+      }
       exclude.insert(it, x);
       break;
     }
