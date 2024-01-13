@@ -23,20 +23,17 @@ void solve(int testcase) {
       upper = min(upper, x);
       break;
     default:
-      auto it = lower_bound(exclude.begin(), exclude.end(), x);
-      if (it - exclude.begin() < exclude.size()) {
-        // safe dereference
-        if (x == *it) {
-          continue;
-        }
-      }
-      exclude.insert(it, x);
+      exclude.push_back(x);
       break;
     }
   }
+  sort(exclude.begin(), exclude.end());
+  
   auto upperIt = upper_bound(exclude.begin(), exclude.end(), upper);
   auto lowerIt = lower_bound(exclude.begin(), exclude.end(), lower);
-  cout << max(0, upper - lower + 1) - (upperIt - lowerIt) << "\n";
+  // lowerIt [lower, ..., upper] upperIt
+  int excludeCount = (upperIt - lowerIt);
+  cout << max(0, upper - lower + 1) - max(0, excludeCount) << "\n";
 }
 
 int main() {
