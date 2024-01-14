@@ -7,16 +7,16 @@
 - Division: 2
 
 ### Total
-- Solved: ? of 7
-- Unsolved: ? of 7
+- Solved: 2 of 7
+- Unsolved: 5 of 7
 
 ### Live Participation
 - Language: C++20
-- Solved: ? of 7
+- Solved: 2 of 7
   A, B
-- Unsolved: ? of 7
+- Unsolved: 5 of 7
   C, D, E, F1, F2
-- Rating: ? of ?
+- Rating: 8657 of 17996
 
 ### Practice
 - Language: C++20
