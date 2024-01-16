@@ -167,23 +167,16 @@ void solve(int testcase) {
   // n edges -> exactly one cycle
   // b should get into entry of circle before a stands there
   
-  StopWatch st;
-
   // DFS with stack to find circle
   set<int> circle = findCycle(road);
-  st.lap();
 
   // DFS to search entry point of b
   vector<bool> visited(n + 1, false);
   int entry = dfs_findEntry(b, road, visited, circle);
-  st.lap();
 
   // a stands first
   int bSave = findCost(road, b, entry);
   int aStand = findCost(road, a, entry);
-  st.lap();
-  
-  st.print();
   
   string result = (aStand <= bSave) ? "NO" : "YES";
 
