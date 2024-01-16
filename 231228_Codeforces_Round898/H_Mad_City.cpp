@@ -104,13 +104,9 @@ set<int> findCycle(vector<vector<int>> road) {
   vector<bool> visited(n + 1, false);
   vector<bool> onTrack(n + 1, false);
   stack<int> st;
-  for (int i = 1; i <= n; ++i) {
-    auto result = dfs_findCycle(i, road, visited, onTrack, st);
-    if (result.first) {
-      return result.second;
-    }
-  }
-  return set<int>(); // Not reachable (always has cycle)
+  
+  auto [_, cycle] = dfs_findCycle(1, road, visited, onTrack, st);
+  return cycle;
 }
 
 int dfs_findEntry(int u, vector<vector<int>> road, vector<bool> &visited,
