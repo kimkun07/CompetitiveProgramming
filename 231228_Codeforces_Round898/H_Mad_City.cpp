@@ -1,3 +1,5 @@
+#include <chrono>
+#include <iomanip>
 #include <iostream>
 #include <map>
 #include <queue>
@@ -10,6 +12,45 @@ typedef long long ll;
 int n;
 
 // note: 1 <= u, v <= n
+class StopWatch {
+private:
+  std::chrono::high_resolution_clock::time_point start;
+  std::vector<std::chrono::high_resolution_clock::time_point> records;
+
+  static std::chrono::high_resolution_clock::time_point now() {
+    return std::chrono::high_resolution_clock::now();
+  }
+
+public:
+  StopWatch() { reset(); }
+  void reset() {
+    start = now();
+    records.clear();
+  }
+  void lap() { records.push_back(now()); }
+
+  void print() {
+    using namespace std::chrono;
+
+    if (records.empty()) {
+      std::cout << "No laps recorded." << std::endl;
+      return;
+    }
+
+    std::cout << std::setw(6) << "Lap" << std::setw(20) << "Time since start"
+              << std::setw(20) << "Time since last lap" << std::endl;
+
+    for (size_t i = 0; i < records.size(); ++i) {
+      auto lapTime = duration_cast<milliseconds>(
+          records[i] - (i == 0 ? start : records[i - 1]));
+      auto totalTime = duration_cast<milliseconds>(records[i] - start);
+
+      std::cout << std::setw(6) << i + 1;
+      std::cout << std::setw(17) << totalTime.count() << " ms";
+      std::cout << std::setw(17) << lapTime.count() << " ms" << std::endl;
+    }
+  }
+};
 
 pair<bool, set<int>> failure() { return make_pair(false, set<int>()); }
 
@@ -129,17 +170,25 @@ void solve(int testcase) {
   // a will catch b
   // n edges -> exactly one cycle
   // b should get into entry of circle before a stands there
+  
+  StopWatch st;
 
   // DFS with stack to find circle
   set<int> circle = findCycle(road);
+  st.lap();
 
   // DFS to search entry point of b
   vector<bool> visited(n + 1, false);
   int entry = dfs_findEntry(b, road, visited, circle);
+  st.lap();
 
   // a stands first
   int bSave = findCost(road, b, entry);
   int aStand = findCost(road, a, entry);
+  st.lap();
+  
+  st.print();
+  
   string result = (aStand <= bSave) ? "NO" : "YES";
 
   cout << result << "\n";
