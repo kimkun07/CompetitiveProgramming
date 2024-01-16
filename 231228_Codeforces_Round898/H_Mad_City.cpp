@@ -55,7 +55,7 @@ public:
 
 pair<bool, set<int>> failure() { return make_pair(false, set<int>()); }
 
-pair<bool, set<int>> dfs_findCycle(int u, vector<vector<int>> road,
+pair<bool, set<int>> dfs_findCycle(int u, vector<vector<int>> &road,
                                    vector<bool> &visited, vector<bool> &onTrack,
                                    stack<int> &track) {
   if (onTrack[u]) {
@@ -101,7 +101,7 @@ pair<bool, set<int>> dfs_findCycle(int u, vector<vector<int>> road,
   return failure();
 }
 
-set<int> findCycle(vector<vector<int>> road) {
+set<int> findCycle(vector<vector<int>> &road) {
   vector<bool> visited(n + 1, false);
   vector<bool> onTrack(n + 1, false);
   stack<int> st;
@@ -110,7 +110,7 @@ set<int> findCycle(vector<vector<int>> road) {
   return cycle;
 }
 
-int dfs_findEntry(int u, vector<vector<int>> road, vector<bool> &visited,
+int dfs_findEntry(int u, vector<vector<int>> &road, vector<bool> &visited,
                   set<int> &circle) {
   if (circle.contains(u)) {
     return u;
@@ -130,7 +130,7 @@ int dfs_findEntry(int u, vector<vector<int>> road, vector<bool> &visited,
   return 0;
 }
 
-int findCost(vector<vector<int>> road, int from, int to) {
+int findCost(vector<vector<int>> &road, int from, int to) {
   queue<pair<int, int>> bfsQueue;
   vector<bool> visited(n + 1, false);
   bfsQueue.push(pair(from, 0));
