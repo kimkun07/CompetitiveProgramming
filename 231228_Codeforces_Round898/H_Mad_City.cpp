@@ -6,7 +6,6 @@
 #include <set>
 #include <stack>
 #include <vector>
-#include <cmath>
 
 using namespace std;
 typedef long long ll;
@@ -155,17 +154,11 @@ int findCost(vector<vector<int>> &road, int from, int to) {
 
 void solve(int testcase) {
   int a, b;
-  // cin >> n >> a >> b;
-  n = 4 * pow(10, testcase);
-  cout << "N: " << n << endl;
-  a = 1;
-  b = n;
+  cin >> n >> a >> b;
   vector<vector<int>> road(n + 1); // road[u] = v -> (u, v)
   for (int i = 0; i < n; ++i) {
     int u, v;
-    // cin >> u >> v;
-    u = i + 1;
-    v = (i + 2 <= n) ? (i + 2) : 1;
+    cin >> u >> v;
     road[u].push_back(v);
     road[v].push_back(u);
   }
@@ -194,15 +187,15 @@ void solve(int testcase) {
   
   string result = (aStand <= bSave) ? "NO" : "YES";
 
-  // cout << result << "\n";
+  cout << result << "\n";
 }
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
 
-  int T; T = 1;
-  // cin >> T;
+  int T;
+  cin >> T;
   for (int t = 1; t <= T; ++t) {
     solve(t);
   }
