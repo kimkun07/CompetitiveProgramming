@@ -8,7 +8,7 @@
 
 ### Practice
 - Language: C++20
-- Solved: 2 of 6
-    A, B
-- Unsolved: 4 of 6
-    C, D, E, F
+- Solved: 3 of 6
+    A, B, C
+- Unsolved: 3 of 6
+    D, E, F
