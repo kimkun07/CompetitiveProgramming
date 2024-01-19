@@ -1,16 +1,18 @@
 #include <bits/stdc++.h>
 
 int a[2005];
-int v[10'005];
+int v[100'005];
+
+using namespace std;
 
 void solve(int testcase) {
   int n, k, d;
-  std::cin >> n >> k >> d;
+  cin >> n >> k >> d;
   for (int i = 1; i <= n; ++i) {
-    std::cin >> a[i];
+    cin >> a[i];
   }
   for (int i = 1; i <= k; ++i) {
-    std::cin >> v[i];
+    cin >> v[i];
   }
 
   // n: 2000
@@ -22,8 +24,8 @@ void solve(int testcase) {
   // day=2n까지만 flush를 참았을 때를 확인하면 된다.
   // flush를 참은 경우 최대 n까지 획득 가능한데,
   // 한 번도 안 참은 경우에도 2n일 동안 n만큼 획득할 수 있기 때문이다.
-  int finalDay = (2 * n < d) ? (2 * n) : d; // min(2 * n, d)
-  for (int i = 1; i <= finalDay; ++i) {
+  int finalDay = (2 * n < d) ? (2 * n) : d;
+  for (int i = 1; i <= min(2 * n, d); ++i) {
     // day=i 일 때 처음 flush한 경우, 총점 scoreWhenFlush 획득
     int cnt = 0;
     for (int j = 1; j <= n; ++j) {
@@ -44,15 +46,15 @@ void solve(int testcase) {
     }
   }
 
-  std::cout << result << std::endl;
+  cout << result << endl;
 }
 
 int main() {
-  std::ios::sync_with_stdio(false);
-  std::cin.tie(0);
+  ios::sync_with_stdio(false);
+  cin.tie(0);
 
   int T;
-  std::cin >> T;
+  cin >> T;
   for (int t = 1; t <= T; ++t) {
     solve(t);
   }
