@@ -61,8 +61,6 @@ void solve(int testcase) {
   // =>  ml > d / 2  (Because ml >= ml2)
   // If we had not take ml, ml cannot match condition 3 after all.
 
-  // TODO: if n2 == 1
-
   // 0. Sort descending, so that big number is taken if possible in knapsack
   auto lama = [](const int &front, const int &back) -> bool {
     return front > back;
@@ -84,10 +82,8 @@ void solve(int testcase) {
   int notTakenMax = 0;
   int weight = d;
   for (int i = n; i >= 1; i--) {
-    if (weight == 0) {
-      break;
-    }
     if (dp[i][weight] == dp[i - 1][weight]) {
+      // works well with weight == 0
       notTakenMax = max(l[i], notTakenMax);
     } else {
       // taken
