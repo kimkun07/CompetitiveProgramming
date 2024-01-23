@@ -13,13 +13,13 @@
 ### Live Participation
 - Language: C++20
 - Solved: 5 of 7
-    A, B, C, D, F
+  A, B, C, D, F
 - Unsolved: 2 of 7
-    E, G
+  E, G
 - Rating: 3583 of 12336
 
 ### Practice
 - Language: C++20
 - Solved: 2 of 2
-    E, G
+  E, G
 - Unsolved: 0 of 2
