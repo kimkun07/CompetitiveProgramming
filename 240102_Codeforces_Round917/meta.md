@@ -11,5 +11,5 @@
 - Solved: 3 of 6
     A, B, C
 - Unsolved: 0 of 6
-- Solution: 1 of 6
+- Solution: 3 of 6
     D, E, F
