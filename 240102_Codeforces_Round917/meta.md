@@ -10,7 +10,7 @@
 - Language: C++20
 - Solved: 3 of 6
     A, B, C
-- Unsolved: 2 of 6
-    E, F
+- Unsolved: 1 of 6
+    F
 - Solution: 1 of 6
-    D
+    D, E
