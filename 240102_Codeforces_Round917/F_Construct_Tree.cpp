@@ -1,6 +1,8 @@
+#include <bitset>
 #include <functional>
 #include <iostream>
 #include <vector>
+
 
 using namespace std;
 using ll = long long;
@@ -70,8 +72,8 @@ void solve(int testcase) {
     }
   }
 
-  vector<vector<bool>> dpA(d + 1, vector<bool>(d + 1));
-  vector<vector<bool>> dpB(d + 1, vector<bool>(d + 1));
+  vector<bitset<2005>> dpA(d + 1);
+  vector<bitset<2005>> dpB(d + 1);
 
   auto prevDp = ref(dpA), dp = ref(dpB);
   // Knapsack with two states
@@ -84,18 +86,24 @@ void solve(int testcase) {
 
     swap(prevDp, dp);
     for (int left = 0; left <= d; ++left) {
-      for (int right = 0; right <= d; ++right) {
-        // ex: (30 + 10, 20)
-        dp.get()[left][right] = prevDp.get()[left][right];
-        if (left - weight >= 0) {
-          dp.get()[left][right] =
-              prevDp.get()[left - weight][right] or dp.get()[left][right];
-        }
-        if (right - weight >= 0) {
-          dp.get()[left][right] =
-              prevDp.get()[left][right - weight] or dp.get()[left][right];
-        }
+      // vector<vector<bool>> equivalent
+      // for (int right = 0; right <= d; ++right) {
+      //   // ex: (30 + 10, 20)
+      //   dp.get()[left][right] = prevDp.get()[left][right];
+      //   if (left - weight >= 0) {
+      //     dp.get()[left][right] =
+      //         prevDp.get()[left - weight][right] or dp.get()[left][right];
+      //   }
+      //   if (right - weight >= 0) {
+      //     dp.get()[left][right] =
+      //         prevDp.get()[left][right - weight] or dp.get()[left][right];
+      //   }
+      // }
+      dp.get()[left] = prevDp.get()[left];
+      if (left - weight >= 0) {
+        dp.get()[left] = prevDp.get()[left - weight] | dp.get()[left];
       }
+      dp.get()[left] = (prevDp.get()[left] << weight) | dp.get()[left];
     }
   }
 
