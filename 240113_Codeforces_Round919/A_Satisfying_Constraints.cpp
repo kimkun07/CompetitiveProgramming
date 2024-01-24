@@ -23,12 +23,14 @@ void solve(int testcase) {
       upper = min(upper, x);
       break;
     default:
+      // It is guaranteed that no two constraints are the exact same
+      // there is no duplicate on `exclude`
       exclude.push_back(x);
       break;
     }
   }
   sort(exclude.begin(), exclude.end());
-  
+
   auto upperIt = upper_bound(exclude.begin(), exclude.end(), upper);
   auto lowerIt = lower_bound(exclude.begin(), exclude.end(), lower);
   // lowerIt [lower, ..., upper] upperIt

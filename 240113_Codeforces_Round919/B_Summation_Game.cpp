@@ -18,7 +18,9 @@ void solve(int testcase) {
   sort(a.begin(), a.end(), [](int &a, int &b) -> bool { return a > b; });
 
   ll sum = 0;
-  for(int i = 0; i < n; ++i){
+  // result when Alice remove 0 elements
+  // Bob will negate largest elements
+  for (int i = 0; i < n; ++i) {
     sum += (i < x) ? (-a[i]) : a[i];
   }
 
@@ -26,6 +28,7 @@ void solve(int testcase) {
   ll maxGain = 0;
   for (int i = 0; i < k; ++i) {
     // +a[i], - 2 * a[i + x]
+    // when Alice remove a[i], Bob will negate a[i+x]
     acc += a[i] - 2 * ((i + x < n) ? a[i + x] : 0);
     maxGain = max(maxGain, acc);
   }
