@@ -20,5 +20,7 @@
 
 ### Practice
 - Language: C++20
-- Solved: ? of ?
-- Unsolved: ? of ?
+- Solved: 1 of 5
+  C
+- Unsolved: 4 of 5
+  D, E, F1, F2

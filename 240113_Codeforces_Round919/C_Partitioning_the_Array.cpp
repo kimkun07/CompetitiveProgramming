@@ -15,13 +15,17 @@ int gcd(int a, int b) {
 }
 
 // divisor including 1, excluding n
-void get_divisor(int n, vector<int> &result) {
+vector<int> get_divisor(int n) {
+  vector<int> result;
+
   for (int i = 1; i < n; ++i) {
     if (n % i == 0) {
       result.push_back(i);
     }
   }
-  // Todo: use pointer and return
+
+  // Compiler may use NVRO
+  return result;
 }
 
 void solve(int testcase) {
@@ -44,8 +48,9 @@ void solve(int testcase) {
   //    a4 - a6 = _ * m = c2
   //    possible iff m is equal to or greater than 2
 
-  vector<int> divisor;
-  get_divisor(n, divisor);
+  // if NVRO is used, divisor will just refer to same object as result
+  // if NVRO is not used, move constructor will be used from result to divisor
+  vector<int> divisor = get_divisor(n);
 
   int ans = 1; // when l == n
   for (auto &&l : divisor) {
