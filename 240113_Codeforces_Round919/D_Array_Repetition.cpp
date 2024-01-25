@@ -4,22 +4,22 @@
 #include <vector>
 
 using namespace std;
-typedef long long ll;
+using ull = unsigned long long;
 
 struct Info {
   bool isAppend; // op isAppend
-  ll length;     // length after op
+  ull length;     // length after op
   int x;         // argument x
 };
 
-const ll kMax = 1000'000'000'000'000'000LL;
+const ull kMax = 1000'000'000'000'000'000uLL;
 // binary predicate which returns ​true if the first argument is less than
 // (i.e. is ordered before) the second.
-const auto lama = [](const Info &e, const ll &k) -> bool {
+const auto lama = [](const Info &e, const ull &k) -> bool {
   return e.length < k;
 };
 
-int mySearch(vector<Info> &op, const vector<Info>::iterator end, ll k) {
+int mySearch(vector<Info> &op, const vector<Info>::iterator end, ull k) {
   const auto it = lower_bound(op.begin(), end, k, lama);
   // it - 1 < k <= it
 
@@ -35,12 +35,12 @@ int mySearch(vector<Info> &op, const vector<Info>::iterator end, ll k) {
       // and it - 1 < k <= it
     }
   } else {
-    // ll prevLen = t.length / (t.x + 1);
+    // ull prevLen = t.length / (t.x + 1);
     // Wrong: if t.length == kMax (overflow), this is incorrect
 
     // it is safe to dereference (it - 1)
     // b == 2 operation -> should have b == 1 opertion before
-    ll prevLen = (*(it - 1)).length;
+    ull prevLen = (*(it - 1)).length;
     return mySearch(op, it, (k - 1) % prevLen + 1);
   }
 }
@@ -50,7 +50,7 @@ void solve(int testcase) {
   cin >> n >> q;
   vector<Info> op(n);
 
-  ll len = 0;
+  ull len = 0;
   for (int i = 0; i < n; ++i) {
     int b, x;
     cin >> b >> x;
@@ -64,16 +64,12 @@ void solve(int testcase) {
     }
     default: {
       {
-        ll a = len;
-        ll b = (x + 1);
-        ll res = kMax / b;
-        // kMax/b - 1 < res <= kMax/b
-        // a > res + 1 -> a * b > kMax
-        if (a > res + 1) {
-          // multiplication overflow
+        ull a = len;
+        ull b = (x + 1);
+        len = a * b;
+        if (len / b != a) {
+          // detect multiplication overflow
           len = kMax;
-        } else {
-          len = a * b;
         }
       }
       len = min(len, kMax);
@@ -85,7 +81,7 @@ void solve(int testcase) {
   }
 
   for (int i = 0; i < q; ++i) {
-    ll k;
+    ull k;
     cin >> k;
     cout << mySearch(op, op.end(), k) << " ";
   }
