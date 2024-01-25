@@ -1,40 +1,55 @@
+#include <cassert>
 #include <iostream>
-#include <map>
-#include <ranges>
-#include <set>
+#include <tuple>
 #include <vector>
-
 
 using namespace std;
 typedef long long ll;
 
-int mySearch(std::ranges::drop_view<
-                 std::ranges::ref_view<std::vector<std::tuple<bool, ll, int>>>>
-                 op,
-             ll k) {
-  auto t = op.back();
-  bool isAppend;
-  ll afterLen;
-  int x;
-  tie(isAppend, afterLen, x) = t;
+struct Info {
+  bool isAppend; // op isAppend
+  ll length;     // length after op
+  int x;         // argument x
+};
 
-  if (isAppend) {
-    if (k == afterLen) {
-      // Found
-      return x;
-    } else if (k < afterLen) {
-      return mySearch(op | ranges::views::drop(1), k);
+const ll kMax = 1000'000'000'000'000'000LL;
+// binary predicate which returns ​true if the first argument is less than
+// (i.e. is ordered before) the second.
+const auto lama = [](const Info &e, const ll &k) -> bool {
+  return e.length < k;
+};
+
+int mySearch(vector<Info> &op, const vector<Info>::iterator end, ll k) {
+  const auto it = lower_bound(op.begin(), end, k, lama);
+  // it - 1 < k <= it
+
+  const Info &t = *it;
+
+  if (t.isAppend) {
+    if (t.length == k) {
+      return t.x;
+    } else {
+      throw "k: " + to_string(k) + ". t.length: " + to_string(t.length);
+      // assert(t.length == k);
+      // because prevLen == t.length - 1
+      // and it - 1 < k <= it
     }
   } else {
-    return mySearch(op | ranges::views::drop(1), k % x);
+    // ll prevLen = t.length / (t.x + 1);
+    // Wrong: if t.length == kMax (overflow), this is incorrect
+
+    // it is safe to dereference (it - 1)
+    // b == 2 operation -> should have b == 1 opertion before
+    ll prevLen = (*(it - 1)).length;
+    return mySearch(op, it, (k - 1) % prevLen + 1);
   }
-  return -1;
 }
 
 void solve(int testcase) {
   int n, q;
   cin >> n >> q;
-  vector<tuple<bool, ll, int>> op; // isAppend, length after op, argument x
+  vector<Info> op(n);
+
   ll len = 0;
   for (int i = 0; i < n; ++i) {
     int b, x;
@@ -42,18 +57,30 @@ void solve(int testcase) {
     switch (b) {
     case 1:
       len += 1;
-      op.push_back(make_tuple(true, len, x));
+      len = min(len, kMax);
+
+      op[i] = {true, len, x};
       break;
     default:
-      len *= x;
-      op.push_back(make_tuple(false, len, x));
+      ll a = len;
+      ll b = (x + 1);
+      // x <= 10^9
+      len = a * b;
+      if (len / b != a) {
+        len = kMax;
+        // multiplication overflow
+      }
+      len = min(len, kMax);
+
+      op[i] = {false, len, x};
       break;
     }
   }
+
   for (int i = 0; i < q; ++i) {
     ll k;
     cin >> k;
-    cout << mySearch(ranges::views::all(op), k) << " ";
+    cout << mySearch(op, op.end(), k) << " ";
   }
   cout << "\n";
 }
