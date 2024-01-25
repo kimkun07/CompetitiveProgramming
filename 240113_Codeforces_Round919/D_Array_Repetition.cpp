@@ -55,25 +55,32 @@ void solve(int testcase) {
     int b, x;
     cin >> b >> x;
     switch (b) {
-    case 1:
+    case 1: {
       len += 1;
       len = min(len, kMax);
 
       op[i] = {true, len, x};
       break;
-    default:
-      ll a = len;
-      ll b = (x + 1);
-      // x <= 10^9
-      len = a * b;
-      if (len / b != a) {
-        len = kMax;
-        // multiplication overflow
+    }
+    default: {
+      {
+        ll a = len;
+        ll b = (x + 1);
+        ll res = kMax / b;
+        // kMax/b - 1 < res <= kMax/b
+        // a > res + 1 -> a * b > kMax
+        if (a > res + 1) {
+          // multiplication overflow
+          len = kMax;
+        } else {
+          len = a * b;
+        }
       }
       len = min(len, kMax);
 
       op[i] = {false, len, x};
       break;
+    }
     }
   }
 
