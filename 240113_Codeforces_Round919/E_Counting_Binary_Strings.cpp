@@ -48,6 +48,9 @@ void solve(int testcase) {
         int delta = (x + 1) * (last + 1);
         if (sum - delta >= 0) {
           acc = addMod(acc, dp[sum - delta][x]);
+        } else {
+          // This break makes (last, x) loop O(k log n)
+          break;
         }
       }
       dp[sum][last] = acc;
