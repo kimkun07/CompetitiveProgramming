@@ -10,7 +10,7 @@
 - Solved: 5 of 7
 - Unsolved: 2 of 7
 
-### Live Participation
+### Live Participation<!-- Or Virtual Participation -->
 - Language: C++20
 - Solved: 2 of 7
   A, B
