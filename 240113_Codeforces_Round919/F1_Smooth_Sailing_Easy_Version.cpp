@@ -34,16 +34,57 @@ template <typename T> void printArr(vector<vector<T>> &arr) {
   cout << endl;
 }
 
-// safety 이상의 tile만 쓰기
-vector<vector<bool>> findPath(int n, int m, vector<vector<Tile>> &map,
-                              vector<vector<int>> &safetyMap, pos start,
-                              int safety) {
+int getN(vector<vector<Tile>> &map) { return map.size() - 1; }
+int getM(vector<vector<Tile>> &map) { return map.front().size() - 1; }
+
+vector<vector<int>> calculateSafetyMap(vector<vector<Tile>> &map) {
+  int n = getN(map), m = getM(map);
+
   queue<pos> bfsQueue;
   vector<vector<bool>> visited(n + 2,
                                vector<bool>(m + 2, false)); // [0..n+1][0..m+1]
+  vector<vector<int>> safetyMap(n + 2, vector<int>(m + 2)); // [0..n+1][0..m+1]
 
-  vector<vector<bool>> result(n + 2,
-                              vector<bool>(m + 2, false)); // [0..n+1][0..m+1]
+  for (int r = 1; r <= n; ++r) {
+    for (int c = 1; c <= m; ++c) {
+      if (map[r][c] == Tile::VOLCANO) {
+        bfsQueue.push({r, c});
+        safetyMap[r][c] = 0;
+        visited[r][c] = true;
+      }
+    }
+  }
+
+  auto deltaArray = array<pos, 4>{pos{1, 0}, pos{-1, 0}, pos{0, 1}, pos{0, -1}};
+  while (not bfsQueue.empty()) {
+    auto [r, c] = bfsQueue.front();
+    bfsQueue.pop();
+
+    for (const auto &[dr, dc] : deltaArray) {
+      int r2 = r + dr, c2 = c + dc;
+      if ((not visited[r2][c2]) and (map[r2][c2] != Tile::GRID)) {
+        visited[r2][c2] = true;
+        // We can set visited to true because only +1 can happen
+        safetyMap[r2][c2] = safetyMap[r][c] + 1;
+        bfsQueue.push({r2, c2});
+      }
+    }
+  }
+
+  return safetyMap;
+}
+
+// safety 이상의 tile만 쓰기
+vector<vector<bool>> findPath(vector<vector<Tile>> &map,
+                              vector<vector<int>> &safetyMap, pos start,
+                              int safety) {
+  int n = getN(map), m = getM(map);
+
+  queue<pos> bfsQueue;
+  vector<vector<bool>> visited(n + 2,
+                               vector<bool>(m + 2, false)); // [0..n+1][0..m+1]
+  vector<vector<bool>> path(n + 2,
+                            vector<bool>(m + 2, false)); // [0..n+1][0..m+1]
 
   auto [r1, c1] = start;
   if (safetyMap[r1][c1] >= safety) {
@@ -54,8 +95,9 @@ vector<vector<bool>> findPath(int n, int m, vector<vector<Tile>> &map,
   auto deltaArray = array<pos, 4>{pos{1, 0}, pos{-1, 0}, pos{0, 1}, pos{0, -1}};
   while (not bfsQueue.empty()) {
     auto [r, c] = bfsQueue.front();
-    result[r][c] = true;
     bfsQueue.pop();
+
+    path[r][c] = true;
 
     for (const auto &[dr, dc] : deltaArray) {
       int r2 = r + dr, c2 = c + dc;
@@ -69,11 +111,13 @@ vector<vector<bool>> findPath(int n, int m, vector<vector<Tile>> &map,
     }
   }
 
-  return result; // Should use NRVP optimization
+  return path; // Should use NRVP optimization
 }
 
-bool isValidPath(int n, int m, vector<vector<Tile>> &map,
-                 vector<vector<bool>> &path, pos start) {
+bool isValidPath(vector<vector<Tile>> &map, vector<vector<bool>> &path,
+                 pos start) {
+  int n = getN(map), m = getM(map);
+
   queue<pos> bfsQueue;
   vector<vector<bool>> visited(n + 2,
                                vector<bool>(m + 2, false)); // [0..n+1][0..m+1]
@@ -84,7 +128,7 @@ bool isValidPath(int n, int m, vector<vector<Tile>> &map,
 
   auto deltaArray =
       array<pos, 8>{pos{1, 0}, pos{-1, 0}, pos{0, 1},  pos{0, -1},
-                    pos{1, 1}, pos{-1, 1}, pos{-1, 1}, pos{-1, -1}};
+                    pos{1, 1}, pos{1, -1}, pos{-1, 1}, pos{-1, -1}};
   while (not bfsQueue.empty()) {
     auto [r, c] = bfsQueue.front();
     bfsQueue.pop();
@@ -112,16 +156,11 @@ void solve(int testcase) {
   vector<vector<Tile>> map(n + 2,
                            vector<Tile>(m + 2, Tile::GRID)); // [0..n+1][0..m+1]
   // 0: grid, 1: Ocean, 2: Volcano, 3: Island
-  vector<vector<int>> safetyMap(n + 2, vector<int>(m + 2)); // [0..n+1][0..m+1]
-  vector<vector<bool>> visited(n + 2,
-                               vector<bool>(m + 2, false)); // [0..n+1][0..m+1]
+  pos islandCenter; // Remember any island tile
 
-  queue<pos> bfsQueue;
-  pos islandCenter;
-
-  char x;
   for (int r = 1; r <= n; ++r) {
     for (int c = 1; c <= m; ++c) {
+      char x;
       cin >> x;
       switch (x) {
       case '.':
@@ -129,9 +168,6 @@ void solve(int testcase) {
         break;
       case 'v':
         map[r][c] = Tile::VOLCANO; // Volcano
-        bfsQueue.push({r, c});
-        safetyMap[r][c] = 0;
-        visited[r][c] = true;
         break;
       case '#':
         map[r][c] = Tile::ISLAND; // Island
@@ -144,22 +180,7 @@ void solve(int testcase) {
     }
   }
 
-  // Preprocessing BFS
-  auto deltaArray = array<pos, 4>{pos{1, 0}, pos{-1, 0}, pos{0, 1}, pos{0, -1}};
-  while (not bfsQueue.empty()) {
-    auto [r, c] = bfsQueue.front();
-    bfsQueue.pop();
-
-    for (const auto &[dr, dc] : deltaArray) {
-      int r2 = r + dr, c2 = c + dc;
-      if ((not visited[r2][c2]) and (map[r2][c2] != Tile::GRID)) {
-        visited[r2][c2] = true;
-        // We can set visited to true because only +1 can happen
-        safetyMap[r2][c2] = safetyMap[r][c] + 1;
-        bfsQueue.push({r2, c2});
-      }
-    }
-  }
+  auto safetyMap = calculateSafetyMap(map);
 
   for (int _ = 0; _ < q; ++_) {
     int x, y;
@@ -170,17 +191,17 @@ void solve(int testcase) {
       // l - 1: success
       // r + 1: fail
       int safety = (l + r) / 2;
-      auto path = findPath(n, m, map, safetyMap, pos{x, y}, safety);
-      bool isSuccess = isValidPath(n, m, map, path, islandCenter);
+      auto path = findPath(map, safetyMap, pos{x, y}, safety);
+      bool isSuccess = isValidPath(map, path, islandCenter);
       if (isSuccess) {
         l = safety + 1;
       } else {
         r = safety - 1;
       }
     }
-    // r(l-1): success, l(r+1): fail
 
-    int ans = r; // == r + 1
+    // r(l-1): success, l(r+1): fail
+    int ans = r;
     cout << ans << "\n";
   }
 }
