@@ -74,7 +74,8 @@ vector<vector<int>> calculateSafetyMap(vector<vector<Tile>> &map) {
   return safetyMap;
 }
 
-// safety 이상의 tile만 쓰기
+// Use all tile >= safety
+// when safety is 0, every tile is available
 vector<vector<bool>> findPath(vector<vector<Tile>> &map,
                               vector<vector<int>> &safetyMap, pos start,
                               int safety) {
@@ -179,6 +180,17 @@ void solve(int testcase) {
       }
     }
   }
+
+  // Solve
+  // 1. Precompute safety of tile
+  //    -> bfs start from volcano
+  // 2. Binary search to maximize safety
+  // 2-1. Find all available ocean from start position
+  //      Can go anyway in path
+  // 2-2. Check if path surround ISLAND completely
+  //      -> bfs starting on ISLAND trying to reach GRID
+  //      start and end of path should be connected horizontally or verically
+  //      -> bfs can move diagonally
 
   auto safetyMap = calculateSafetyMap(map);
 

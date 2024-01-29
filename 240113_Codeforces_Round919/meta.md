@@ -21,8 +21,8 @@
 ### Practice
 - Language: C++20
 - Solved: 2 of 5
-  C, D
+  C, D, F1
 - Unsolved: 2 of 5
-  F1, F2
+  F2
 - Solution: 1 of 5
   E
