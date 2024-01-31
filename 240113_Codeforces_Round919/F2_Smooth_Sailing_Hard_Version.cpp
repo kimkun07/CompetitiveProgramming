@@ -50,75 +50,106 @@ vector<vector<int>> calculateSafetyMap(vector<vector<Tile>> &map) {
   return safetyMap;
 }
 
-// UF[r][c][parity] = parent, rank
-#pragma region Union_Find DataStructure
-using Node = tuple<Pos, int>;
-using UF = vector<vector<vector<tuple<Node, int>>>>;
-tuple<Node, int> &ref(UF &uf, Node node) {
-  auto [pos, parity] = node;
-  auto [r, c] = pos;
-  return uf[r][c][parity];
-}
-Node &parent(UF &uf, Node node) { return std::get<0>(ref(uf, node)); }
-int &myRank(UF &uf, Node node) { return std::get<1>(ref(uf, node)); }
-
-bool isRoot(UF &uf, Node node) { return node == parent(uf, node); }
-
-// findRoot with path compression
-Node findRoot(UF &uf, Node node) {
-  if (not isRoot(uf, parent(uf, node))) {
-    parent(uf, node) = findRoot(uf, parent(uf, node));
-    // rank is meaningless for non-root element
-  }
-  return parent(uf, node);
-}
-
-bool isUnion(UF &uf, Node nodeA, Node nodeB) {
-  Node rootA = findRoot(uf, nodeA);
-  Node rootB = findRoot(uf, nodeB);
-  
-  return rootA == rootB;
-}
-
-// QueryManager
-using TT = vector<vector<vector<set<int>>>>;
-set<int> &mySet(TT &tt, Node node) {
-  auto [pos, parity] = node;
-  auto [r, c] = pos;
-  return tt[r][c][parity];
-}
 int answer[300'005]; // [0..q-1]
 
-void doUnion(UF &uf, Node nodeA, Node nodeB, TT &tt, int safety) {
-  Node rootA = findRoot(uf, nodeA);
-  Node rootB = findRoot(uf, nodeB);
-  
-  if (isUnion(uf, rootA, rootB)) {
-    return;
-  }
+#pragma region Disjoint Set DataStructure
 
-  // small to large merge
-  if (myRank(uf, rootA) < myRank(uf, rootB)) {
-    swap(rootA, rootB);
-  }
 
-  // rootA is large, rootB is small
-  if (myRank(uf, rootA) == myRank(uf, rootB)) {
-    myRank(uf, rootA) += 1;
+using Index = tuple<Pos, int>;
+
+struct Node {
+  Index parent;
+  int rank;
+  set<int> queryIndexSet;
+};
+
+// UF[r][c][parity] = parent, rank, querySet
+class DisjointSet : vector<vector<vector<Node>>> {
+
+  // Base Methods
+  Node &ref(Index index) {
+    auto [pos, parity] = index;
+    auto [r, c] = pos;
+    return (*this)[r][c][parity];
   }
-  // Merge tt
-  set<int> &setA = mySet(tt, rootA);
-  for (auto &&i : mySet(tt, rootB)) {
-    if (setA.count(i) == 1) {
-      setA.erase(i);
-      answer[i] = safety;
-    } else {
-      setA.insert(i);
+  Index &parent(Index index) { return ref(index).parent; }
+  int &myRank(Index index) { return ref(index).rank; }
+  set<int> &mySet(Index index) { return ref(index).queryIndexSet; }
+
+  bool isRoot(Index index) { return index == parent(index); }
+
+public:
+  // vector of [0..N-1][0..M-1][0..K]
+  DisjointSet(int N, int M, int K)
+      : vector<vector<vector<Node>>>(N,
+                                     vector<vector<Node>>(M, vector<Node>(K))) {
+    for (int r = 0; r < N; ++r) {
+      for (int c = 0; c < M; ++c) {
+        for (int parity = 0; parity < K; ++parity) {
+          // parent = self, rank = 1
+          Index index = {{r, c}, parity};
+          ref(index) = {index, 1, set<int>()};
+        }
+      }
     }
   }
 
-  parent(uf, rootB) = rootA;
-}
+  // findRoot (while doing path compression)
+  Index findRoot(Index index) {
+    if (not isRoot(parent(index))) {
+      parent(index) = findRoot(parent(index));
+      // rank is meaningless for non-root element
+    }
+    return parent(index);
+  }
+
+  // if two nodes are already in union
+  bool isUnion(Index indexA, Index indexB) {
+    Index rootA = findRoot(indexA);
+    Index rootB = findRoot(indexB);
+
+    return rootA == rootB;
+  }
+
+  // merge two nodes
+  void doUnion(Index indexA, Index indexB, int safety) {
+    Index rootA = findRoot(indexA);
+    Index rootB = findRoot(indexB);
+
+    if (isUnion(rootA, rootB)) {
+      return;
+    }
+
+    // Check rank for small to large merge
+    if (myRank(rootA) < myRank(rootB)) {
+      std::swap(rootA, rootB);
+    }
+
+    // now rootA is large, rootB is small
+    // 1. Merge parent
+    parent(rootB) = rootA;
+    // 2. Merge rank
+    if (myRank(rootA) == myRank(rootB)) {
+      myRank(rootA) += 1;
+    }
+    // 3. Merge queryIndexSet
+    // Check if query target (x, y) has merged now by token
+    set<int> &setA = mySet(rootA);
+    for (auto &&i : mySet(rootB)) {
+      if (setA.count(i) == 1) {
+        setA.erase(i);
+        answer[i] = safety;
+      } else {
+        // If not merged, move token to new root
+        setA.insert(i);
+      }
+    }
+  }
+
+  void mySetInsert(Index index, int item) { mySet(index).insert(item); }
+};
+
+
 #pragma endregion
 
 void solve(int testcase) {
@@ -158,6 +189,18 @@ void solve(int testcase) {
   // Solve
   // 1. Precompute safety of tile
   //    -> bfs start from volcano
+  // 2. Create disjoint set with (row, column, parity)
+  // 3. For query target (x, y), mark token: add queryIndex for both parity
+  // 4. Disjoint Set Union: Search path with tiles >= safety x
+  //    Check tile with safety x. If move to neighbor is possible then union
+  //    -> If (x, y, 0) and (x, y, 1) is in same set, then loop path exists
+  // 4-1. When move, check if move crossed the line then invert parity.
+  // 4-2. When union, check queryIndex set and find duplicate.
+  //      If duplicate, then (x, y, 0) and (x, y, 1) became same set.
+  //
+  // Draw line from rightmost island to right so that it can reach grid.
+  // A point(rightmost island) is in polygon(path) iff path crossed the line odd
+  // numbers of time.
 
   auto safetyMap = calculateSafetyMap(map);
 
@@ -170,55 +213,51 @@ void solve(int testcase) {
     }
   }
 
-  UF union_find(n + 1,
-                vector<vector<tuple<Node, int>>>(
-                    m + 1, vector<tuple<Node, int>>(2))); //[1..n][1..m][0, 1]
-  // init UF
-  for (int r = 1; r <= n; ++r) {
-    for (int c = 1; c <= m; ++c) {
-      for (int parity = 0; parity <= 1; ++parity) {
-        // parent = self, rank = 1
-        union_find[r][c][parity] = {{{r, c}, parity}, 1};
-      }
-    }
-  }
+  DisjointSet disjoint_set(n + 1, m + 1, 2); //[1..n][1..m][0, 1]
 
-  TT tt(n + 1, vector<vector<set<int>>>(m + 1, vector<set<int>>(2))); // [1..n][1..m][0, 1]
   for (int qIndex = 0; qIndex < q; ++qIndex) {
     int x, y;
     cin >> x >> y;
-    
-    mySet(tt, {{x, y}, 0}).insert(qIndex);
-    mySet(tt, {{x, y}, 1}).insert(qIndex);
+
+    disjoint_set.mySetInsert({{x, y}, 0}, qIndex);
+    disjoint_set.mySetInsert({{x, y}, 1}, qIndex);
   }
 
   auto deltaArray = array<Pos, 4>{Pos{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
   auto [islandR, islandC] = islandRightmost;
 
+  // Union high safety first, for maximum safety
   for (int safety = safetyMax; safety >= 0; --safety) {
     for (auto &&pos : safety_pos[safety]) {
       auto [r, c] = pos;
       for (auto &&[dr, dc] : deltaArray) {
         int r2 = r + dr, c2 = c + dc;
-        if ((map[r2][c2] == Tile::OCEAN or map[r2][c2] == Tile::VOLCANO) and
-            safetyMap[r2][c2] >= safety) {
-          // Able to move in safety
-          if ((islandR == r or islandR == r2) and
-              (islandR - 1 == r or islandR - 1 == r2) and
-              (c > islandC and c2 > islandC)) {
-            // Cross the line
-            doUnion(union_find, {pos, 0}, {{r2, c2}, 1}, tt, safety);
-            doUnion(union_find, {pos, 1}, {{r2, c2}, 0}, tt, safety);
-          } else {
-            doUnion(union_find, {pos, 0}, {{r2, c2}, 0}, tt, safety);
-            doUnion(union_find, {pos, 1}, {{r2, c2}, 1}, tt, safety);
-          }
+
+        if (not(map[r2][c2] == Tile::OCEAN or map[r2][c2] == Tile::VOLCANO)) {
+          continue;
+        }
+        // Able to Move
+        if (not safetyMap[r2][c2] >= safety) {
+          continue;
+        }
+        // Able to move in safety
+
+        if ((islandR == r or islandR == r2) and
+            (islandR - 1 == r or islandR - 1 == r2) and
+            (c > islandC and c2 > islandC)) {
+          // If move crossed the line: invert parity
+          disjoint_set.doUnion({pos, 0}, {{r2, c2}, 1}, safety);
+          disjoint_set.doUnion({pos, 1}, {{r2, c2}, 0}, safety);
+        } else {
+          // If move didn't cross the line: preserve parity
+          disjoint_set.doUnion({pos, 0}, {{r2, c2}, 0}, safety);
+          disjoint_set.doUnion({pos, 1}, {{r2, c2}, 1}, safety);
         }
       }
     }
   }
-  
-  for(int i = 0; i < q; ++i){
+
+  for (int i = 0; i < q; ++i) {
     cout << answer[i] << "\n";
   }
 }
