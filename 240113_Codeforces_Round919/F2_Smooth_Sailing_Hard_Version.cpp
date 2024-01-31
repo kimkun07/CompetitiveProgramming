@@ -54,7 +54,6 @@ int answer[300'005]; // [0..q-1]
 
 #pragma region Disjoint Set DataStructure
 
-
 using Index = tuple<Pos, int>;
 
 struct Node {
@@ -149,7 +148,6 @@ public:
   void mySetInsert(Index index, int item) { mySet(index).insert(item); }
 };
 
-
 #pragma endregion
 
 void solve(int testcase) {
@@ -237,7 +235,7 @@ void solve(int testcase) {
           continue;
         }
         // Able to Move
-        if (not safetyMap[r2][c2] >= safety) {
+        if (not(safetyMap[r2][c2] >= safety)) {
           continue;
         }
         // Able to move in safety
