@@ -1,5 +1,6 @@
 #include <iostream>
 #include <queue>
+#include <set>
 #include <tuple>
 #include <vector>
 
@@ -72,9 +73,29 @@ Node findRoot(UF &uf, Node node) {
   return parent(uf, node);
 }
 
-void doUnion(UF &uf, Node nodeA, Node nodeB) {
+bool isUnion(UF &uf, Node nodeA, Node nodeB) {
   Node rootA = findRoot(uf, nodeA);
   Node rootB = findRoot(uf, nodeB);
+  
+  return rootA == rootB;
+}
+
+// QueryManager
+using TT = vector<vector<vector<set<int>>>>;
+set<int> &mySet(TT &tt, Node node) {
+  auto [pos, parity] = node;
+  auto [r, c] = pos;
+  return tt[r][c][parity];
+}
+int answer[300'005]; // [0..q-1]
+
+void doUnion(UF &uf, Node nodeA, Node nodeB, TT &tt, int safety) {
+  Node rootA = findRoot(uf, nodeA);
+  Node rootB = findRoot(uf, nodeB);
+  
+  if (isUnion(uf, rootA, rootB)) {
+    return;
+  }
 
   // small to large merge
   if (myRank(uf, rootA) < myRank(uf, rootB)) {
@@ -85,19 +106,20 @@ void doUnion(UF &uf, Node nodeA, Node nodeB) {
   if (myRank(uf, rootA) == myRank(uf, rootB)) {
     myRank(uf, rootA) += 1;
   }
+  // Merge tt
+  set<int> &setA = mySet(tt, rootA);
+  for (auto &&i : mySet(tt, rootB)) {
+    if (setA.count(i) == 1) {
+      setA.erase(i);
+      answer[i] = safety;
+    } else {
+      setA.insert(i);
+    }
+  }
+
   parent(uf, rootB) = rootA;
 }
 #pragma endregion
-
-template <typename T> void printArr(vector<vector<T>> &arr) {
-  for (auto row : arr) {
-    for (auto e : row) {
-      cout << e << " ";
-    }
-    cout << endl;
-  }
-  cout << endl;
-}
 
 void solve(int testcase) {
   int n, m, q;
@@ -138,7 +160,6 @@ void solve(int testcase) {
   //    -> bfs start from volcano
 
   auto safetyMap = calculateSafetyMap(map);
-  printArr(safetyMap);
 
   vector<vector<Pos>> safety_pos(safetyMax + 1); // [0..safetyMax]
   for (int r = 1; r <= n; ++r) {
@@ -162,6 +183,15 @@ void solve(int testcase) {
     }
   }
 
+  TT tt(n + 1, vector<vector<set<int>>>(m + 1, vector<set<int>>(2))); // [1..n][1..m][0, 1]
+  for (int qIndex = 0; qIndex < q; ++qIndex) {
+    int x, y;
+    cin >> x >> y;
+    
+    mySet(tt, {{x, y}, 0}).insert(qIndex);
+    mySet(tt, {{x, y}, 1}).insert(qIndex);
+  }
+
   auto deltaArray = array<Pos, 4>{Pos{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
   auto [islandR, islandC] = islandRightmost;
 
@@ -177,20 +207,19 @@ void solve(int testcase) {
               (islandR - 1 == r or islandR - 1 == r2) and
               (c > islandC and c2 > islandC)) {
             // Cross the line
-            doUnion(union_find, {pos, 0}, {{r2, c2}, 1});
-            doUnion(union_find, {pos, 1}, {{r2, c2}, 0});
+            doUnion(union_find, {pos, 0}, {{r2, c2}, 1}, tt, safety);
+            doUnion(union_find, {pos, 1}, {{r2, c2}, 0}, tt, safety);
           } else {
-            doUnion(union_find, {pos, 0}, {{r2, c2}, 0});
-            doUnion(union_find, {pos, 1}, {{r2, c2}, 1});
+            doUnion(union_find, {pos, 0}, {{r2, c2}, 0}, tt, safety);
+            doUnion(union_find, {pos, 1}, {{r2, c2}, 1}, tt, safety);
           }
         }
       }
     }
   }
-
-  for (int qIndex = 0; qIndex < q; ++qIndex) {
-    int x, y;
-    cin >> x >> y;
+  
+  for(int i = 0; i < q; ++i){
+    cout << answer[i] << "\n";
   }
 }
 

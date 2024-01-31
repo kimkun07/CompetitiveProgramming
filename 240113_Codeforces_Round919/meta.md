@@ -8,7 +8,8 @@
 
 ### Total
 - Solved: 5 of 7
-- Unsolved: 2 of 7
+- Unsolved: 0 of 7
+- Solution: 2 of 7
 
 ### Live Participation
 - Language: C++20
@@ -20,9 +21,8 @@
 
 ### Practice
 - Language: C++20
-- Solved: 2 of 5
+- Solved: 3 of 5
   C, D, F1
-- Unsolved: 2 of 5
-  F2
-- Solution: 1 of 5
-  E
+- Unsolved: 0 of 5
+- Solution: 2 of 5
+  E, F2
