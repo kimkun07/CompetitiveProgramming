@@ -29,10 +29,14 @@ void solve(int testcase) {
     arr[i] = 0;
   }
   for (int i = 1; i <= n; ++i) {
-    arr[a[i]] = 2;
+    if (a[i] <= k) {
+      arr[a[i]] = 2;
+    }
   }
   for (int i = 1; i <= m; ++i) {
-    arr[b[i]] = arr[b[i]] | 1;
+    if (b[i] <= k) {
+      arr[b[i]] = arr[b[i]] | 1;
+    }
   }
 
   int aOnly = 0, bOnly = 0;
