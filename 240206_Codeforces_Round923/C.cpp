@@ -14,7 +14,7 @@ void printAns(bool yes) {
   }
 }
 
-int a[200'005], b[200'005], arr[200'005];
+int a[200'005], b[200'005], arr[400'005];
 void solve(int testcase) {
   int n, m, k;
   cin >> n >> m >> k;
