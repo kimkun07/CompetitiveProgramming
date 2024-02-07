@@ -12,17 +12,17 @@
 
 ### Live Participation<!-- Or Virtual Participation -->
 - Language: C++20
-- Solved: 2 of 7
-  A, B
-- Unsolved: 5 of 7
-  C, D, E, F1, F2
-- Rating: 8657 of 17996
+- Solved: ? of ?
+  ?, ?
+- Unsolved: ? of ?
+  ?, ?
+- Rating: ? of ?
 
 ### Practice
 - Language: C++20
-- Solved: 2 of 5
-  C, D
-- Unsolved: 2 of 5
-  F1, F2
-- Solution: 1 of 5
-  E
+- Solved: ? of ?
+  ?, ?
+- Unsolved: ? of ?
+  ?, ?
+- Solution: ? of ?
+  ?, ?
