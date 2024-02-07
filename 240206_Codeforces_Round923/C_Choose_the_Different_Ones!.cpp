@@ -14,10 +14,10 @@ void printAns(bool yes) {
   }
 }
 
-int a[200'005], b[200'005], arr[400'005];
 void solve(int testcase) {
   int n, m, k;
   cin >> n >> m >> k;
+  vector<int> a(n + 1), b(m + 1);
   for (int i = 1; i <= n; ++i) {
     cin >> a[i];
   }
@@ -25,6 +25,7 @@ void solve(int testcase) {
     cin >> b[i];
   }
 
+  vector<int> arr(k + 1);
   for (int i = 1; i <= k; ++i) {
     arr[i] = 0;
   }
