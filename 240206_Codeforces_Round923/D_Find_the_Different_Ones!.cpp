@@ -15,8 +15,11 @@ void printAns(bool yes) {
 }
 
 struct Res {
-  int i, j;
-  int value; // 0: different
+  int i, j;  // only valid when different: position of different
+  int value; // 0: different. when same: the same value
+
+  bool is_same() { return value != 0; }
+  static Res make_same(int value) { return {-1, -1, value}; }
 };
 
 int a[200'005];
@@ -27,69 +30,76 @@ int right(int node) { return 2 * node + 1; }
 
 Res construct(int node, int myLeft, int myRight) {
   if (myLeft == myRight) {
-    tree[node] = {-1, -1, a[myLeft]};
+    // Leaf Node
+    tree[node] = Res::make_same(a[myLeft]);
     return tree[node];
   }
 
   int mid = (myLeft + myRight) / 2;
-  auto [l_i, l_j, l_value] = construct(left(node), myLeft, mid);
-  auto [r_i, r_j, r_value] = construct(right(node), mid + 1, myRight);
+  auto lRes = construct(left(node), myLeft, mid);
+  auto rRes = construct(right(node), mid + 1, myRight);
 
-  if (l_value != 0 and r_value != 0) {
+  if (lRes.is_same() and rRes.is_same()) {
     // left is same, right is same
-    if (l_value == r_value) {
-      tree[node] = {-1, -1, l_value};
+    if (lRes.value == rRes.value) {
+      // left == right
+      tree[node] = Res::make_same(lRes.value);
     } else {
+      // left != right
       tree[node] = {myLeft, myRight, 0};
     }
-    return tree[node];
-  }
-  if (l_value == 0) {
+  } else if (not lRes.is_same()) {
     // left is different
-    tree[node] = {l_i, l_j, 0};
-    return {l_i, l_j, 0};
+    tree[node] = lRes;
+    return tree[node];
+  } else {
+    // right is different
+    tree[node] = rRes;
   }
-  // right is different
-  tree[node] = {r_i, r_j, 0};
-  return {r_i, r_j, 0};
+
+  return tree[node];
 }
 
-Res query_same(int node, int myLeft, int myRight, int searchL, int searchR) {
+Res query(int node, int myLeft, int myRight, int searchL, int searchR) {
   // Assume: [ [  search  ] my ]
   if (searchL <= myLeft and myRight <= searchR) {
+    // searchRange == my node range
     return tree[node];
-  }
-  if (searchR < myLeft or myRight < searchL) {
-    return {-1, -1, -1};
   }
 
   int mid = (myLeft + myRight) / 2;
-  auto [l_i, l_j, l_value] =
-      query_same(left(node), myLeft, mid, searchL, searchR);
-  auto [r_i, r_j, r_value] =
-      query_same(right(node), mid + 1, myRight, searchL, searchR);
+  // myLeft  mid  myRight
+  Res lRes = (searchL <= mid)
+                 ? query(left(node), myLeft, mid, searchL, min(searchR, mid))
+                 : Res{-1, -1, -1};
+  Res rRes = (mid + 1 <= searchR) ? query(right(node), mid + 1, myRight,
+                                          max(searchL, mid + 1), searchR)
+                                  : Res{-1, -1, -1};
 
-  if (l_value == 0) {
+  // Special Case: either left or right is invalid
+  if (lRes.value == -1) {
+    lRes = rRes;
+  }
+  if (rRes.value == -1) {
+    rRes = lRes;
+  }
+
+  if (not lRes.is_same()) {
     // left is different
-    return {l_i, l_j, 0};
+    return lRes;
   }
-  if (r_value == 0) {
+  if (not rRes.is_same()) {
     // right is different
-    return {r_i, r_j, 0};
-  }
-
-  if (l_value == -1) {
-    l_value = r_value;
-  }
-  if (r_value == -1) {
-    r_value = l_value;
+    return rRes;
   }
 
   // left is same, right is same
-  if (l_value == r_value) {
-    return {-1, -1, l_value};
+  if (lRes.value == rRes.value) {
+    // left == right
+    return lRes;
   } else {
-    // but different!
+    // left != right
+    // i = from left, j = from right
     return {max(myLeft, searchL), min(myRight, searchR), 0};
   }
 }
@@ -110,7 +120,7 @@ void solve(int testcase) {
     int l, r;
     cin >> l >> r;
 
-    auto [i, j, same] = query_same(1, 1, n, l, r);
+    auto [i, j, value] = query(1, 1, n, l, r);
     cout << i << " " << j << "\n";
   }
   cout << "\n";
