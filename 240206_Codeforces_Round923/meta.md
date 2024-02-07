@@ -20,9 +20,9 @@
 
 ### Practice
 - Language: C++20
-- Solved: ? of ?
-  ?, ?
-- Unsolved: ? of ?
+- Solved: 1 of 3
+  E
+- Unsolved: ? of 3
   ?, ?
 - Solution: ? of ?
   ?, ?
