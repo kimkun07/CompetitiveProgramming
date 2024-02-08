@@ -7,8 +7,9 @@
 - Division: 3
 
 ### Total
-- Solved: 4 of 7
+- Solved: 6 of 7
 - Unsolved: 0 of 7
+- Solution: 1 of 7
 
 ### Live Participation
 - Language: C++20
@@ -16,13 +17,12 @@
   A, B, C, D
 - Unsolved: 3 of 7
   E, F, G
-- Rating: ? of ?
+- Rating: 6879 of 16030
 
 ### Practice
 - Language: C++20
-- Solved: 1 of 3
-  E
-- Unsolved: ? of 3
-  ?, ?
-- Solution: ? of ?
-  ?, ?
+- Solved: 2 of 3
+  E, F
+- Unsolved: 0 of 3
+- Solution: 1 of 3
+  G
