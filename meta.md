@@ -7,8 +7,9 @@
 - Division: 2
 
 ### Total
-- Solved: 5 of 7
-- Unsolved: 2 of 7
+- Solved: ? of 7
+- Unsolved: ? of 7
+- Solution: ? of 7
 
 ### Live Participation<!-- Or Virtual Participation -->
 - Language: C++20
