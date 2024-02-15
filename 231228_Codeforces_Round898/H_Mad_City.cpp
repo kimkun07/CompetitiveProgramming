@@ -54,47 +54,48 @@ public:
 
 pair<bool, set<int>> failure() { return make_pair(false, set<int>()); }
 
-pair<bool, set<int>> dfs_findCycle(int u, vector<vector<int>> &road,
-                                   vector<bool> &visited, vector<bool> &onTrack,
+pair<bool, set<int>> dfs_findCycle(int u, vector<vector<int>> &graph,
+                                   vector<bool> &visited_total,
+                                   vector<bool> &visited_now,
                                    stack<int> &track) {
-  if (onTrack[u]) {
-    // found
-    set<int> cycle;
-    while (not track.empty()) {
-      int v = track.top();
-      track.pop();
+  visited_total[u] = true;
+  visited_now[u] = true;
 
-      cycle.insert(v);
-      if (v == u) {
-        return make_pair(true, cycle);
-      }
-    }
-
-    return failure();
-  }
-  if (visited[u]) {
-    return failure();
-  }
-
-  visited[u] = true;
-  onTrack[u] = true;
-  int prev = (track.empty()) ? 0 : track.top();
+  int prev = (track.empty()) ? -1 : track.top();
   track.push(u);
 
-  for (auto &&v : road[u]) {
+  for (auto &&v : graph[u]) {
     if (prev == v) {
-      // just came from prev to v. not going backward.
+      // just came from prev to v
+      // Not going backward (Only in undirected graph)
       continue;
     }
 
-    auto result = dfs_findCycle(v, road, visited, onTrack, track);
-    if (result.first) {
-      // Found
-      return result;
+    if (visited_now[v]) {
+      // found
+      set<int> cycle;
+      while (not track.empty()) {
+        int x = track.top();
+        track.pop();
+
+        cycle.insert(x);
+        // track: ... v .. u
+        if (x == v) {
+          break;
+        }
+      }
+      return make_pair(true, cycle);
+    } else if (visited_total[v]) {
+      continue; // there was no cycle starting from v
+    } else {
+      auto result = dfs_findCycle(v, graph, visited_total, visited_now, track);
+      if (result.first) {
+        return result;
+      }
     }
   }
 
-  onTrack[u] = false;
+  visited_now[u] = false;
   track.pop();
 
   return failure();
@@ -104,7 +105,7 @@ set<int> findCycle(vector<vector<int>> &road) {
   vector<bool> visited(n + 1, false);
   vector<bool> onTrack(n + 1, false);
   stack<int> st;
-  
+
   auto [_, cycle] = dfs_findCycle(1, road, visited, onTrack, st);
   return cycle;
 }
@@ -166,7 +167,7 @@ void solve(int testcase) {
   // a will catch b
   // n edges -> exactly one cycle
   // b should get into entry of circle before a stands there
-  
+
   // DFS with stack to find circle
   set<int> circle = findCycle(road);
 
@@ -177,7 +178,7 @@ void solve(int testcase) {
   // a stands first
   int bSave = findCost(road, b, entry);
   int aStand = findCost(road, a, entry);
-  
+
   string result = (aStand <= bSave) ? "NO" : "YES";
 
   cout << result << "\n";
