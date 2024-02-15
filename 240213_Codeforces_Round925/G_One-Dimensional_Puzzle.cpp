@@ -51,12 +51,9 @@ void solve(int testcase) {
     // TODO: Is there an input where all is 0?
     result = (c3 == 0 or c4 == 0) ? 1 : 0;
   } else if (c1 == 0 or c2 == 0) {
-    if (c1 == 0 and c2 == 1) {
-      // Sequence: 2, 4, 4, 4, ...
-      result = (c3 == 0) ? 1 : 0;
-    } else if (c2 == 0 and c1 == 1) {
-      // Sequence: ..., 3, 3, 1
-      result = (c4 == 0) ? 1 : 0;
+    if (c1 == 1 or c2 == 1) {
+      // Sequence: ... 3, 3, 2, 4, 4, ...
+      result = 1;
     } else {
       result = 0;
     }
