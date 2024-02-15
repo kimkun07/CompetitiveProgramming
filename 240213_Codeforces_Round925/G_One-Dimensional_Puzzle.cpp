@@ -54,8 +54,7 @@ void solve(int testcase) {
     if (c1 == 0 and c2 == 1) {
       // Sequence: 2, 4, 4, 4, ...
       result = (c3 == 0) ? 1 : 0;
-    }
-    if (c2 == 0 and c1 == 1) {
+    } else if (c2 == 0 and c1 == 1) {
       // Sequence: ..., 3, 3, 1
       result = (c4 == 0) ? 1 : 0;
     } else {
