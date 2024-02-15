@@ -24,6 +24,10 @@ void solve(int testcase) {
     cin >> a[i];
   }
 
+  // Solve
+  // (a[i] + a[j]) % x == 0 and (a[i] - a[j]) % y == 0
+  // => -a[j] % x == a[i] % x and a[j] % y == a[i] % y
+
   map<Pair, int> m;
   ll result = 0;
   for (int i = 1; i <= n; ++i) {

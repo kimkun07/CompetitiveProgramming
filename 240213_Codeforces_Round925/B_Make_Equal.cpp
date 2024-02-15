@@ -32,6 +32,10 @@ void solve(int testcase) {
       printAns(false);
       return;
     }
+    // reserve will incerase if need < 0
+    // (reserve leftover so a[i] == target)
+    // reserve will decrease if need > 0
+    // (use reserve so a[i] == target)
     reserve -= need;
   }
 

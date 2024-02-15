@@ -48,6 +48,8 @@ void solve(int testcase) {
 
   sort(zeros.begin(), zeros.end(), willBeTrue);
   for (int i = 0; i < n; ++i) {
+    // First, Anna flips largest 000.
+    // Second, Sasha saves largest 000.
     if (i % 2 == 0) {
       totalLength -= zeros[i];
     }

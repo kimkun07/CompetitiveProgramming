@@ -40,10 +40,13 @@ void solve(int testcase) {
 
   int result;
   if (leftDiff == -1) {
+    // no change: 1..n is same
     result = 0;
   } else if (a[1] == a[n]) {
+    // change leftDiff..rightDiff
     result = rightDiff - leftDiff + 1;
   } else {
+    // change leftDiff..n or 1..rightDiff
     result = min(rightDiff - 1 + 1, n - leftDiff + 1);
   }
 
