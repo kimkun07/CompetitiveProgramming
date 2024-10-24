@@ -12,7 +12,26 @@ vector<string> split(const string &);
  * The function accepts INTEGER_ARRAY arr as parameter.
  */
 
-void plusMinus(vector<int> arr) {}
+void plusMinus(vector<int> arr) {
+  int length = arr.size();
+  int posi = 0, nega = 0, zero = 0;
+  for (int i = 0; i < arr.size(); i++) {
+    if (arr[i] > 0) {
+      posi += 1;
+    } else if (arr[i] < 0) {
+      nega += 1;
+    } else {
+      zero += 1;
+    }
+  }
+
+  cout << fixed;
+  cout.precision(6);
+
+  cout << (float)posi / length << endl;
+  cout << (float)nega / length << endl;
+  cout << (float)zero / length << endl;
+}
 
 int main() {
   string n_temp;
