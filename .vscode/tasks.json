@@ -1,17 +1,10 @@
 {
   "tasks": [
     {
-      "label": "CreateExeDirectory",
-      "type": "shell",
-      "command": "mkdir ${fileDirname}\\exe || echo 0",
-      "presentation": {
-        // "close": true
-      }
-    },
-    {
-      "label": "build",
+      "label": "build file",
+      "detail": "Build current file (C++)",
       "type": "cppbuild",
-      "command": "C:/Program Files/mingw64/bin/g++.exe",
+      "command": "g++",
       "args": [
         "-x", // Delete Local Symbol
         "c++",
@@ -24,12 +17,11 @@
         "-fcompare-debug-second", // Disable note Message
         "${file}",
         "-o",
-        "${fileDirname}\\exe\\${fileBasenameNoExtension}.exe"
+        "${fileDirname}/${fileBasenameNoExtension}.out"
       ],
-      "options": {
-        "cwd": "C:/Program Files/mingw64/bin"
-      },
-      "problemMatcher": ["$gcc"],
+      "problemMatcher": [
+        "$gcc"
+      ],
       "group": {
         "kind": "build",
         "isDefault": true
@@ -42,8 +34,33 @@
         "showReuseMessage": true,
         "clear": false
       },
-      "dependsOn": ["CreateExeDirectory"],
-      "dependsOrder": "sequence"
+    },
+    {
+      "label": "run file",
+      "detail": "Run current file (C++)",
+      "dependsOn": [
+        "build file"
+      ],
+      "type": "shell",
+      "command": "echo Build finished. Waiting for user input... && ${fileDirname}/${fileBasenameNoExtension}.out",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": true
+      }
+    },
+    {
+      "label": "clean .out files",
+      "type": "shell",
+      "command": "find ${workspaceFolder} -name '*.out' -delete",
+      "problemMatcher": []
     }
   ],
   "version": "2.0.0"
