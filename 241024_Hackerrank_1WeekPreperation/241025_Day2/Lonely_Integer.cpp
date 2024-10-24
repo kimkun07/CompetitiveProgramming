@@ -13,7 +13,25 @@ vector<string> split(const string &);
  * The function accepts INTEGER_ARRAY a as parameter.
  */
 
-int lonelyinteger(vector<int> a) {}
+int lonelyinteger(vector<int> a) {
+  int count[105];
+  for (int i = 0; i <= 100; ++i) {
+    count[i] = 0;
+  }
+
+  for (int i = 0; i < a.size(); ++i) {
+    count[a[i]] += 1;
+  }
+
+  int i;
+  for (i = 0; i <= 100; ++i) {
+    if (count[i] == 1) {
+      break;
+    }
+  }
+
+  return i;
+}
 
 int main() {
   ofstream fout(getenv("OUTPUT_PATH"));
