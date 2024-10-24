@@ -5,18 +5,17 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "(gdb) Debug",
-      "preLaunchTask": "build",
+      "name": "(gdb) Launch",
+      "preLaunchTask": "build file",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${fileDirname}\\exe\\${fileBasenameNoExtension}.exe",
+      "program": "${fileDirname}/${fileBasenameNoExtension}.out",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",
-      "miDebuggerPath": "C:\\Program Files\\mingw64\\bin\\gdb.exe",
       "setupCommands": [
         {
           "description": "Enable pretty-printing for gdb",
