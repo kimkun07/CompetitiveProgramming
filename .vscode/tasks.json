@@ -43,6 +43,11 @@
       ],
       "type": "shell",
       "command": "echo Build finished. Waiting for user input... && ${fileDirname}/${fileBasenameNoExtension}.out",
+      "options": {
+        "env": {
+          "OUTPUT_PATH": "/dev/stdout" // For Hackerrank
+        }
+      },
       "group": {
         "kind": "test",
         "isDefault": true
