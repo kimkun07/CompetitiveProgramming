@@ -6,18 +6,19 @@
       "type": "cppbuild",
       "command": "g++",
       "args": [
+        "${file}",
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}.out",
         "-x", // Delete Local Symbol
         "c++",
         "-w", // Disable Warning Message
         "-g", // Insert infomation for debugger in binary
         // "-O2", VSCode breakpoint not working correctly with -O2 option
         "-std=gnu++20",
-        "-static",
+        // "-static", // dynamic library (libcurl) cannot work with static
+        "-lcurl", // include libcurl library
         "-fdiagnostics-color=always",
         "-fcompare-debug-second", // Disable note Message
-        "${file}",
-        "-o",
-        "${fileDirname}/${fileBasenameNoExtension}.out"
       ],
       "problemMatcher": [
         "$gcc"
