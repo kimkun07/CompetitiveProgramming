@@ -1,3 +1,4 @@
+#include "json/json.h"
 #include <bits/stdc++.h>
 #include <curl/curl.h>
 
@@ -34,8 +35,48 @@ string rest_get(const string &url) {
   }
 }
 
-int main(int argc, char const *argv[]) {
-  string response = rest_get("https://jsonplaceholder.typicode.com/todos/1");
-  cout << "Response: " << response << endl;
+struct Todo {
+  int userId;
+  int id;
+  string title;
+  bool completed;
+
+  void print() {
+    cout << "User ID: " << userId << endl;
+    cout << "ID: " << id << endl;
+    cout << "Title: " << title << endl;
+    cout << "Completed: " << boolalpha << completed << endl;
+  }
+};
+
+optional<Todo> parseJsonString(const string &jsonString) {
+  istringstream istream(jsonString);
+  Json::CharReaderBuilder builder;
+  Json::Value jsonValue;
+  string errs;
+
+  if (Json::parseFromStream(builder, istream, &jsonValue, &errs)) {
+    Todo todo{.userId = jsonValue["userId"].asInt(),
+              .id = jsonValue["id"].asInt(),
+              .title = jsonValue["title"].asString(),
+              .completed = jsonValue["completed"].asBool()};
+    return todo;
+  } else {
+    cerr << "Failed to parse JSON: " << errs << endl;
+    return nullopt;
+  }
+}
+
+int main() {
+  string response = rest_get("https://jsonplaceholder.typicode.com/todos/2");
+  cout << "Raw JSON response: " << response << endl;
+
+  optional<Todo> todoOpt = parseJsonString(response);
+  if (todoOpt) {
+    Todo todo = *todoOpt;
+    todo.print();
+  } else {
+    cerr << "Failed parsing" << endl;
+  }
   return 0;
 }

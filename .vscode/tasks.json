@@ -16,7 +16,14 @@
         // "-O2", VSCode breakpoint not working correctly with -O2 option
         "-std=gnu++20",
         // "-static", // dynamic library (libcurl) cannot work with static
-        "-lcurl", // include libcurl library
+        // Libraries
+        "-I", // enable vcpkg
+        "~/vcpkg/installed/x64-linux/include",
+        "-L",
+        "~/vcpkg/installed/x64-linux/lib",
+        "-lcurl", // link libcurl library
+        "-ljsoncpp", // link jsoncpp library
+        // Others
         "-fdiagnostics-color=always",
         "-fcompare-debug-second", // Disable note Message
       ],
