@@ -13,7 +13,16 @@ vector<string> split(const string &);
  * The function accepts INTEGER_ARRAY arr as parameter.
  */
 
-vector<int> countingSort(vector<int> arr) {}
+vector<int> countingSort(vector<int> arr) {
+  int n = arr.size();
+
+  vector<int> count_bins(100);
+  for (int i = 0; i < n; i++) {
+    count_bins[arr[i]] += 1;
+  }
+
+  return count_bins;
+}
 
 int main() {
   ofstream fout(getenv("OUTPUT_PATH"));

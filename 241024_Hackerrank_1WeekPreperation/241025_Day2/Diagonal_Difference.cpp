@@ -13,7 +13,23 @@ vector<string> split(const string &);
  * The function accepts 2D_INTEGER_ARRAY arr as parameter.
  */
 
-int diagonalDifference(vector<vector<int>> arr) {}
+int diagonalDifference(vector<vector<int>> arr) {
+  int n = arr.size();
+
+  int primary_diagonal = 0;
+  for (int i = 0; i < n; i++) {
+    primary_diagonal += arr[i][i];
+  }
+  cout << primary_diagonal << endl;
+
+  int secondary_diagonal = 0;
+  for (int i = 0; i < n; i++) {
+    secondary_diagonal += arr[n - 1 - i][i];
+  }
+  cout << secondary_diagonal << endl;
+
+  return abs(primary_diagonal - secondary_diagonal);
+}
 
 int main() {
   ofstream fout(getenv("OUTPUT_PATH"));
