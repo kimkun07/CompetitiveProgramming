@@ -13,7 +13,37 @@ vector<string> split(const string &);
  * The function accepts 2D_INTEGER_ARRAY petrolpumps as parameter.
  */
 
-int truckTour(vector<vector<int>> petrolpumps) {}
+int truckTour(vector<vector<int>> petrolpumps) {
+  int N = petrolpumps.size();
+  vector<int> gain(N);
+  for (int i = 0; i < N; i++) {
+    int amount = petrolpumps[i][0];
+    int distance = petrolpumps[i][1];
+    gain[i] = amount - distance;
+  }
+
+  // Starting at index i, sum of gain is always positive
+  for (int i = 0; i < N; i++) {
+    long long int sum = 0;
+    int j;
+    for (j = 0; j < N; j++) {
+      sum += gain[(i + j) % N];
+      if (sum < 0) {
+        break;
+      }
+    }
+    if (j == N) {
+      return i;
+    }
+  }
+  return -1;
+
+  // All test case passed with above
+  // - O(N^2) was sufficient (all tests)
+  //   N: 10^5, Time limit=2s
+  // - No need to consider reverse direction
+}
+
 int main() {
   ofstream fout(getenv("OUTPUT_PATH"));
 
