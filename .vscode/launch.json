@@ -13,7 +13,12 @@
       "args": [],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
-      "environment": [],
+      "environment": [
+        { // For Hackerrank
+          "name": "OUTPUT_PATH",
+          "value": "/dev/stdout"
+        }
+      ],
       "externalConsole": false,
       "MIMode": "gdb",
       "setupCommands": [
