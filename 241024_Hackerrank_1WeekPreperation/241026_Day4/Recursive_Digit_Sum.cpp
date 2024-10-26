@@ -15,7 +15,18 @@ vector<string> split(const string &);
  *  2. INTEGER k
  */
 
-int superDigit(string n, int k) {}
+int superDigit(string n, int k) {
+  if (n.size() == 1 and k == 1) {
+    return stoi(n);
+  }
+
+  long long int sum = 0;
+  for (int i = 0; i < n.size(); i++) {
+    sum += n[i] - '0';
+  }
+  sum = sum * k;
+  return superDigit(to_string(sum), 1);
+}
 
 int main() {
   ofstream fout(getenv("OUTPUT_PATH"));

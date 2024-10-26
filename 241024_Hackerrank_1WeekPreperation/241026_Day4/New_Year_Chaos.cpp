@@ -12,7 +12,33 @@ vector<string> split(const string &);
  * The function accepts INTEGER_ARRAY q as parameter.
  */
 
-void minimumBribes(vector<int> q) {}
+void minimumBribes(vector<int> q) {
+  // Going all the way back can happen.
+  // Going front can only happen twice.
+  int n = q.size();
+  vector<int> replay(n);
+  for (int i = 0; i < n; i++) {
+    replay[i] = i + 1;
+  }
+
+  int sum = 0;
+  for (int i = 0; i < n; i++) {
+    if (q[i] == replay[i]) {
+      continue;
+    } else if (q[i] == replay[i + 1]) {
+      sum += 1;
+      std::swap(replay[i], replay[i + 1]);
+    } else if (q[i] == replay[i + 2]) {
+      sum += 2;
+      std::swap(replay[i + 1], replay[i + 2]);
+      std::swap(replay[i], replay[i + 1]);
+    } else {
+      cout << "Too chaotic" << endl;
+      return;
+    }
+  }
+  cout << sum << endl;
+}
 
 int main() {
   string t_temp;

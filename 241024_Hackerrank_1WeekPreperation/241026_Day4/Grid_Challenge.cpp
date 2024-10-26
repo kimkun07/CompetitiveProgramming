@@ -12,7 +12,31 @@ string rtrim(const string &);
  * The function accepts STRING_ARRAY grid as parameter.
  */
 
-string gridChallenge(vector<string> grid) {}
+string gridChallenge(vector<string> grid) {
+  int n = grid.size();
+  vector<vector<char>> new_grid(n);
+
+  for (int i = 0; i < n; i++) {
+    new_grid[i] = vector<char>(grid[i].begin(), grid[i].end());
+    sort(new_grid[i].begin(), new_grid[i].end());
+  }
+
+  for (int c = 0; c < n; c++) {
+    int r;
+    for (r = 0; r < n - 1; r++) {
+      if (new_grid[r][c] <= new_grid[r + 1][c]) {
+        // sorted
+        continue;
+      } else {
+        break;
+      }
+    }
+    if (r != n - 1) {
+      return "NO";
+    }
+  }
+  return "YES";
+}
 
 int main() {
   ofstream fout(getenv("OUTPUT_PATH"));
