@@ -14,7 +14,21 @@ string rtrim(const string &);
  *  2. INTEGER k
  */
 
-string caesarCipher(string s, int k) {}
+string caesarCipher(string s, int k) {
+  for (int i = 0; i < s.size(); i++) {
+    char c = s[i];
+    if (c >= 'a' and c <= 'z') {
+      int a = c - 'a';
+      a = (a + k) % 26;
+      s[i] = a + 'a';
+    } else if (c >= 'A' and c <= 'Z') {
+      int a = c - 'A';
+      a = (a + k) % 26;
+      s[i] = a + 'A';
+    }
+  }
+  return s;
+}
 
 int main() {
   ofstream fout(getenv("OUTPUT_PATH"));

@@ -15,7 +15,26 @@ vector<string> split(const string &);
  *  2. INTEGER m
  */
 
-int towerBreakers(int n, int m) {}
+int towerBreakers(int n, int m) {
+  // Factorize m = a_1^{x_1} a_2^{x_2} ... a_l^{x_l}
+  // k = x_1 + x_2 + ... + x_l
+
+  // Game can be viewed as (k, k, ..., k)
+  // Each player can subtract any value to one of the tower
+  // Player wins if it makes (0, 0, ..., 0)
+
+  if (m == 1) {
+    // Cannot move at all (k=0)
+    return 2;
+  }
+
+  // n:1 (a)    => P1 wins (for all value a > 0)
+  // n:2 (a, a) => P2 can make (1, 1), then P1 should break to n:1, P2 wins
+  //               if P1 subtracts b, P2 does same to other tower
+  // n:3 (a, a, a) => P1 can break to n:2, P1 wins
+  // n:4           => P2 can move symmetrically to make (b, b, c, c)
+  return (n % 2 == 1) ? 1 : 2;
+}
 
 int main() {
   ofstream fout(getenv("OUTPUT_PATH"));
